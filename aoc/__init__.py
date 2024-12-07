@@ -1,17 +1,18 @@
-import re
-import sys
 import time
 from contextlib import contextmanager
+
 
 def read_input(name, cast=str):
     with open(f"inputs/input{name:02}") as f:
         content = f.readlines()
     return [cast(x.strip()) for x in content]
 
+
 def read_raw_input(name):
     with open(f"inputs/input{name:02}") as f:
         content = f.read()
     return content
+
 
 def read_test(index, name, cast=str):
     with open(f"tests/inputs/day{name:02}_{index}") as f:
@@ -20,11 +21,13 @@ def read_test(index, name, cast=str):
         expected = [cast(x.strip()) for x in f.readlines()]
     return _input, expected
 
+
 @contextmanager
 def timerc():
     start_time = time.time()
     yield
     print(f"\nTime required: {(time.time() - start_time)*1000:.2f} ms\n")
+
 
 def timer(func):
     def wrapper(*args, **kwargs):
@@ -33,4 +36,5 @@ def timer(func):
         print(f"\nTime required: {(time.time() - start_time)*1000:.2f} ms\n")
         print(f"Result: {result}")
         return result
+
     return wrapper
