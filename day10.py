@@ -3,6 +3,7 @@ from collections import deque
 
 _, _, grid = read_grid(10, cast=int)
 
+
 def bfs(grid, position):
     visited = set()
     queue = deque([(position, [position])])
