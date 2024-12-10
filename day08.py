@@ -3,7 +3,8 @@ from collections import defaultdict
 from itertools import combinations
 
 max_x, max_y, source_grid = read_grid(8)
-source_grid = {k: '.' if v == '#' else v for k, v in source_grid.items()}
+source_grid = {k: "." if v == "#" else v for k, v in source_grid.items()}
+
 
 def print_grid(g):
     for y in range(max_y + 1):
@@ -14,6 +15,7 @@ def print_grid(g):
 
 def in_bounds(loc):
     return 0 <= loc[0] <= max_x and 0 <= loc[1] <= max_y
+
 
 def get_locs(grid) -> dict:
     locs = defaultdict(list)

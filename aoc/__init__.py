@@ -2,14 +2,14 @@ import time
 from contextlib import contextmanager
 
 
-def read_grid(name):
+def read_grid(name, cast=str):
     data = read_input(name)
     max_y = 0
     max_x = 0
     grid = {}
     for y, line in enumerate(data):
         for x, v in enumerate(line):
-            grid[(x, y)] = v
+            grid[(x, y)] = cast(v)
             if x > max_x:
                 max_x = x
             if y > max_y:
