@@ -1,4 +1,5 @@
 from aoc import timer, read_raw_input
+from tqdm import tqdm
 
 disk_map = read_raw_input(9).strip()
 
@@ -44,29 +45,31 @@ part1()
 def part2():
     expanded = list(expand_files(disk_map))
     head = len(expanded) - 1
-    while True:
-        head_val = expanded[head]
-        if any([val == None for val in head_val]):
-            head -= 1
-            continue
+    with tqdm(total=len(expanded)) as pbar:
+        pbar.set_description("Expanding files")
+        while head >= 0:
+            head_val = expanded[head]
+            if any([val is None for val in head_val]):
+                head -= 1
+                pbar.update(1)
+                continue
 
-        for idx, value in enumerate(expanded):
-            if idx < head and len(value) >= len(head_val) and value[0] is None:
-                expanded[idx] = head_val
-                expanded[head] = [None] * len(head_val)
-                diff = len(value) - len(head_val)
-                if diff:
-                    expanded.insert(idx + 1, [None] * diff)
-                else:
-                    head -= 1
-                break
-        else:
-            head -= 1
+            for idx, value in enumerate(expanded):
+                if idx < head and len(value) >= len(head_val) and value[0] is None:
+                    expanded[idx] = head_val
+                    expanded[head] = [None] * len(head_val)
+                    diff = len(value) - len(head_val)
+                    if diff:
+                        expanded.insert(idx + 1, [None] * diff)
+                    else:
+                        head -= 1
+                        pbar.update(1)
+                    break
+            else:
+                head -= 1
+                pbar.update(1)
 
-        if head <= 0:
-            break
-
-    return checksum([val for sublist in expanded for val in sublist])
+        return checksum([val for sublist in expanded for val in sublist])
 
 
 part2()
