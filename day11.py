@@ -1,3 +1,4 @@
+import math
 from tqdm import tqdm
 from aoc import timer, read_raw_input
 from functools import cache
@@ -22,14 +23,22 @@ def apply_rules_p1(stones: list) -> list:
 @timer
 def part1():
     local_stones = stones.copy()
-    for i in tqdm(range(6)):
-        print(local_stones, len(local_stones), i)
+    for i in tqdm(range(25)):
         local_stones = apply_rules_p1(local_stones)
 
     return len(local_stones)
 
 
-part1()
+@cache
+def calc_length(stone):
+    return math.floor(math.log10(stone)) + 1
+
+
+@cache
+def split_stone(stone, length):
+    divider = 10 ** (length // 2)
+    left_half, right_half = divmod(stone, divider)
+    return left_half, right_half
 
 
 @cache
@@ -38,11 +47,11 @@ def apply_rules_p2(stone, blinks):
         return 1
     elif stone == 0:
         return apply_rules_p2(1, blinks - 1)
-    elif len(str(stone)) % 2 == 0:
-        str_stone = str(stone)
-        return apply_rules_p2(
-            int(str_stone[: len(str_stone) // 2]), blinks - 1
-        ) + apply_rules_p2(int(str_stone[len(str_stone) // 2 :]), blinks - 1)
+    elif (length := calc_length(stone)) % 2 == 0:
+        left_half, right_half = split_stone(stone, length)
+        return apply_rules_p2(left_half, blinks - 1) + apply_rules_p2(
+            right_half, blinks - 1
+        )
     else:
         return apply_rules_p2(stone * 2024, blinks - 1)
 
@@ -52,9 +61,11 @@ def part2():
     local_stones = stones.copy()
     total = 0
     for stone in local_stones:
-        count = apply_rules_p2(stone, 75)
-        total += count
+        total += apply_rules_p2(stone, 75)
+
     return total
 
 
-part2()
+if __name__ == "__main__":
+    part1()
+    part2()
